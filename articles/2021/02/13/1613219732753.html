@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="theme-color" content="#3b3e43"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black"><meta name="format-detection" content="telephone=no"/><title>总线结构及其演进 - 张科扬</title><meta name="description" content="计算机系统中总线的设计思路及其演进过程"/><meta property="og:description" content="计算机系统中总线的设计思路及其演进过程"/>    <meta name="keywords" content="Solo,博客,开源"/><link rel="dns-prefetch" href="https://Zhangkeyang0828.github.io"/><link rel="dns-prefetch" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="https://Zhangkeyang0828.github.io"><link rel="icon" type="image/png" href="https://b3log.org/images/brand/solo-128.png"/><link rel="apple-touch-icon" href="https://b3log.org/images/brand/solo-128.png"><link rel="shortcut icon" type="image/x-icon" href="https://b3log.org/images/brand/solo-128.png"><meta name="copyright" content="B3log"/><meta http-equiv="Window-target" content="_top"/><meta property="og:locale" content="zh_CN"/><meta property="og:title" content="总线结构及其演进 - 张科扬"/><meta property="og:site_name" content="张科扬"/><meta property="og:url"      content="https://Zhangkeyang0828.github.io/articles/2021/02/13/1613219732753.html?"/><meta property="og:image" content="https://b3log.org/images/brand/solo-128.png"/><link rel="search" type="application/opensearchdescription+xml" title="总线结构及其演进 - 张科扬" href="/opensearch.xml"><link href="https://Zhangkeyang0828.github.io/rss.xml" title="RSS" type="application/rss+xml" rel="alternate"/><link rel="manifest" href="https://Zhangkeyang0828.github.io/manifest.json">        <link rel="canonical" href="https://Zhangkeyang0828.github.io/articles/2021/02/13/1613219732753.html">        <link rel="stylesheet"
+              href="https://Zhangkeyang0828.github.io/skins/yilia/css/base.css?1613218681521"/>
+            <link rel="prev" title="总线的概念" href="https://Zhangkeyang0828.github.io/articles/2021/02/13/1613218808017.html">
+            <link rel="next" title="总线的判优控制" href="https://Zhangkeyang0828.github.io/articles/2021/02/13/1613219908489.html">
+    <script src="https://cdn.jsdelivr.net/npm/vditor@3.6.6/dist/js/icons/ant.js" async="" id="vditorIconScript"></script></head>
+<body>
+<div class="side fn__flex-column">
+    <div class="overlay">
+        <a onclick="$('.side .toc').show()" href="javascript:void(0)" class="toc-btn">目录</a>
+    </div>
+    <div class="user__sites">
+    <a href="https://ld246.com/member/zhangkeyang"
+       title="https://ld246.com/member/zhangkeyang"
+       class="user__site"
+       target="_blank" rel="noopener nofollow">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path fill="#d23f31" style="fill: var(--color1, #d23f31)" d="M5.787 17.226h17.033l5.954 9.528c0.47 0.752 0.003 1.361-1.042 1.361h-15.141z"></path>
+            <path d="M10.74 3.927h17.033c1.045 0 1.512 0.609 1.042 1.361l-5.954 9.528h-19.872l6.379-10.209c0.235-0.376 0.849-0.681 1.372-0.681z"></path>
+            <path d="M2.953 17.226h2.839l6.804 10.889h-1.892c-0.523 0-1.137-0.305-1.372-0.681z"></path>
+        </svg>
+    </a>
+
+
+    </div>
+    <header class="content fn__flex-1">
+        <a href="https://Zhangkeyang0828.github.io">
+            <img class="avatar" src="https://b3logfile.com/avatar/1605724109427.png?imageView2/1/w/128/h/128/interlace/0/q/100" title="" alt=""/>
+        </a>
+        <hgroup>
+            <h1>
+                <a href="https://Zhangkeyang0828.github.io">张科扬</a>
+            </h1>
+        </hgroup>
+        <p class="subtitle">
+            记录精彩的程序人生
+        </p>
+        <nav>
+            <ul>
+                <li>
+                    <a href="https://Zhangkeyang0828.github.io/tags.html">标签墙</a>
+                    &nbsp; &nbsp;
+                    <a href="https://Zhangkeyang0828.github.io/archives.html">存档</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <footer>
+            <div class="vditor-reset">Open Source, Open Mind, <br/>Open Sight, Open Future!
+
+<!-- 公告栏可使用 HTML、JavaScript，比如可以在此加入第三方统计 js --></div>
+        <a rel="alternate" href="https://Zhangkeyang0828.github.io/rss.xml" title="订阅" class="icon-rss"></a>
+    </footer>
+        <div class="toc">
+            <a onclick="$('.side .toc').hide();" href="javascript:void(0)" class="close">X</a>
+<ul class="article__toc">
+        <li class="toc__h2">
+            <a href="#toc_h2_0">1. 单总线结构</a>
+        </li>
+        <li class="toc__h2">
+            <a href="#toc_h2_1">2. 双总线结构</a>
+        </li>
+        <li class="toc__h2">
+            <a href="#toc_h2_2">3. 三总线结构</a>
+        </li>
+        <li class="toc__h2">
+            <a href="#toc_h2_3">5. 四总线结构</a>
+        </li>
+        <li class="toc__h2">
+            <a href="#toc_h2_4">5. 补充</a>
+        </li>
+</ul>        </div>
+</div>
+<main>
+    <article class="post">
+        <header class="fn__flex">
+            <h2 class="fn__flex-1">
+                <a rel="bookmark" href="https://Zhangkeyang0828.github.io/articles/2021/02/13/1613219732753.html">
+                    总线结构及其演进
+                </a>
+            </h2>
+            <time><span class="icon-date"></span> 2021-02-13</time>
+        </header>
+        <div class="article__footer fn__flex">
+            <span class="icon-tag fn__flex-center"></span>
+            <span>&nbsp;&nbsp;&nbsp;</span>
+            <div class="tags fn__flex-1 fn__flex-center">
+                    <a class="tag" rel="tag" href="https://Zhangkeyang0828.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%8E%9F%E7%90%86">
+                        计算机系统原理</a>
+            </div>
+            <span>&nbsp;&nbsp;&nbsp;</span>
+                <a href="https://Zhangkeyang0828.github.io/articles/2021/02/13/1613219732753.html#b3logsolocomments"
+                   class="vditor-tooltipped__n vditor-tooltipped link fn__flex-center"
+                   aria-label="评论">
+                    <span data-uvstatcmt="1613219732753">0</span>
+                    <span class="icon-chat"></span>
+                </a>
+            <a class="vditor-tooltipped__n vditor-tooltipped link fn__flex-center"
+               href="https://Zhangkeyang0828.github.io/articles/2021/02/13/1613219732753.html"
+               aria-label="浏览">
+                <span data-uvstaturl="https://Zhangkeyang0828.github.io/articles/2021/02/13/1613219732753.html">0</span>
+                <span class="icon-views"></span>
+            </a>
+            <a rel="nofollow" href="https://Zhangkeyang0828.github.io/authors/1612757054956" class="fn__flex-center">
+                <img class="avatar" title="zhangkeyang" alt="zhangkeyang"
+                     src="https://b3logfile.com/avatar/1605724109427.png?imageView2/1/w/128/h/128/interlace/0/q/100"/>
+            </a>
+        </div>
+
+        <section class="abstract vditor-reset">
+            <h2 id="toc_h2_0">1. 单总线结构</h2>
+<p><img src="https://b3logfile.com/file/2021/02/单总线结构.drawio-b33f5f1f.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100" alt="单总线结构.drawio.png"></p>
+<p>这种结构的缺点：CPU、主存以及所有的I/O设备都使用同一根总线进行数据传输，总线非常忙碌，其性能成为了整个计算机系统的瓶颈。</p>
+<h2 id="toc_h2_1">2. 双总线结构</h2>
+<p><img src="https://b3logfile.com/file/2021/02/双总线结构系统总线外设总线.drawio-312fd313.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100" alt="双总线结构.drawio.png"></p>
+<p>其中的<strong>通道</strong>是一种具有特殊功能的控制器，具有自己的指令系统，控制程序一般由操作系统来实现。计算机系统使用这种控制器对所有的I/O设备进行统一管理。这种总线结构将CPU和主存之间的通讯与众多I/O设备进行解耦，提高了CPU与主存的利用率，付出的代价是外设中的数据无法直接送入主存中；也就是说，当需要对外设进行操作时，还是会存在阻塞现象。其实很多早期的计算机系统采用的都是这种设计结构。</p>
+<h2 id="toc_h2_2">3. 三总线结构</h2>
+<p><img src="https://b3logfile.com/file/2021/02/早期三总线结构.drawio-a16cd5c8.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100" alt="三总线结构.drawio.png"></p>
+<p>实际上双总线结构已经可以满足早期的计算需求了。但是现代计算机中，外设的种类和数量都大幅增加，设计人员认为有必要进一步降低总线的压力，从而提高系统运行效率。经过调研和统计后人们发现，有一部分外设的运行速度很快，并且需要频繁地与主存交换数据(例如硬盘、打印机等支持每秒钟传输数千个字节至数十千个字节以上，并且每次传输都以固定长度的字节数为传输单元的设备)，于是将这些外设称为<strong>高速外设</strong>；反之，其它大多数外设运行地都比较慢，并且与主存的交互不是很频繁(例如鼠标、键盘、语音输入等支持每秒钟几个字节至几百个字节的设备)，将这些设备称为<strong>低速外设</strong>。</p>
+<p>实际上，对于低速外设，优化的空间是很小的，而且即使是优化了设计，计算机系统整体的性能也不会提高到哪里去，毕竟他们与系统中其它部件的交互并不频繁，投入-产出比很低。因此，没有必要让这些低速外设接入主存总线，因为他们会打断CPU与主存的数据传输，从而形成系统瓶颈；只需要针对高速外设进行硬件设计上的优化即可。</p>
+<p>为了解决高速外设与主存之间的数据传输问题，设计人员引入第三根总线，专门用于在主存与高速外设之间交换数据，这样就避免了高速外设对I/O总线的竞争，让高速设备可以直接与主存交换数据。这种技术称为<strong>直接主存访问，即DMA技术</strong>。DMA总线的造价是昂贵的，并且硬件设计也很复杂，因此高速设备仍然可以通过低速I/O总线来进行数据交互，但此时数据必须经过CPU。</p>
+<h2 id="toc_h2_3">5. 四总线结构</h2>
+<p><img src="https://b3logfile.com/file/2021/02/四总线结构.drawio-aac60b75.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100" alt="四总线结构.drawio.png"></p>
+<p>现代CPU的发展速度非常快(根据摩尔定律，CPU的性能每2年就可以翻倍)；但是，主存的发展却远远跟不上CPU的发展，这相当于原本齐头并进的两兄弟，其中一个突然拉胯，拖了兄弟的后腿。为了解决这个问题，系统设计人员引入了<strong>高速缓冲存储器(cache)</strong>，它的读写速度非常接近于CPU，但造价很昂贵，大量使用缓存硬件将导致计算机系统的造价飙升。</p>
+<p>好在人们发现，绝大多数计算机程序都遵循所谓的<strong>局部性原理</strong>，也就是说当CPU读取了主存中的某个数据时，其相邻地址的数据往往也会被读取。所以，设计人员将容量很小的缓存硬件嵌入CPU当中；当CPU读取主存中的数据时，连带将这个数据周围的数据也一起读取出来，放入缓存当中；下次要读取数据时，先看看缓存中有没有数据，如果有数据就直接将其送入CPU；否则再访问主存，并再将其周围数据放入缓存当中，以此类推。</p>
+<p>这样，仅仅使用很少的缓存，就可以很大程度上解决CPU与主存的速度不均衡的问题。</p>
+<h2 id="toc_h2_4">5. 补充</h2>
+<p>上面的4.1——4.4节展示了计算机系统总线结构的发展历程。其实整个计算机系统是不断地向前发展的，并且每个硬件的厂商都提出了各自不同的设计思路和方案，并且在此基础上演化出了各种经典的硬件架构。但是，无论厂商如何设计与演化，最终的产品其实都遵循以上的设计思路；并且，他们各自的硬件出厂时会针对不同的操作系统提供驱动程序，屏蔽掉不同硬件架构之间的实现细节，但是以上特性终归要设计专有的指令集。绝大多数情况下，我们没有必要对每种硬件的架构细节都了如指掌，只要了解他们共同支持的特性即可，这些特性足够帮助我们写出性能卓越的程序了。</p>
+
+                <aside class="fn__flex">
+                        <a class="fn__flex-1 fn__flex-inline" rel="prev" href="https://Zhangkeyang0828.github.io/articles/2021/02/13/1613218808017.html">
+                            <strong>&lt;</strong>
+                            <span>&nbsp; 总线的概念&nbsp;&nbsp;&nbsp;</span>
+                        </a>
+                        <a class="fn__flex-inline" rel="next" href="https://Zhangkeyang0828.github.io/articles/2021/02/13/1613219908489.html">
+                            <span>总线的判优控制&nbsp; </span>
+                            <strong>&gt;</strong>
+                        </a>
+                </aside>
+        </section>
+
+        <footer class="fn-clear share">
+            <div class="fn-right">
+<div class="article__share"
+     data-title="总线结构及其演进"
+     data-blogtitle="张科扬"
+     data-url="https://Zhangkeyang0828.github.io/articles/2021/02/13/1613219732753.html"
+     data-avatar="https://b3logfile.com/avatar/1605724109427.png?imageView2/1/w/128/h/128/interlace/0/q/100">
+    <span class="item" data-type="qqz">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M22.824 13.989l-8.348 6.287s3.351 0.522 8.404 0.461l-0.23-1.040 7.2-6.549c0.132-0.12 0.183-0.312 0.129-0.487s-0.203-0.299-0.377-0.314l-9.492-0.856-3.708-9.213c-0.068-0.169-0.226-0.279-0.401-0.279s-0.333 0.11-0.401 0.279l-3.708 9.213-9.492 0.856c-0.174 0.015-0.323 0.139-0.377 0.314s-0.004 0.366 0.129 0.487l7.2 6.549-2.158 9.742c-0.040 0.178 0.026 0.365 0.168 0.474 0.142 0.107 0.331 0.115 0.481 0.021l8.158-5.165 8.158 5.165c0.070 0.045 0.147 0.066 0.225 0.066 0.090 0 0.18-0.029 0.256-0.086 0.142-0.109 0.208-0.295 0.168-0.474l-1.707-7.704c0.732-0.386 1.538-1.040 1.538-1.040s-3.195 1.638-14.664 0.838l8.312-6.325s-0.327-0.534-10.744-0.914c-0.697-0.026 8.493-1.83 15.281-0.305z"></path>
+        </svg>
+    </span>
+    <span class="item" data-type="wechat">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M9.062 9.203c0-0.859-0.562-1.422-1.422-1.422-0.844 0-1.703 0.562-1.703 1.422 0 0.844 0.859 1.406 1.703 1.406 0.859 0 1.422-0.562 1.422-1.406zM20.672 17.125c0-0.562-0.562-1.125-1.422-1.125-0.562 0-1.125 0.562-1.125 1.125 0 0.578 0.562 1.141 1.125 1.141 0.859 0 1.422-0.562 1.422-1.141zM16.984 9.203c0-0.859-0.562-1.422-1.406-1.422-0.859 0-1.703 0.562-1.703 1.422 0 0.844 0.844 1.406 1.703 1.406 0.844 0 1.406-0.562 1.406-1.406zM26.906 17.125c0-0.562-0.578-1.125-1.422-1.125-0.562 0-1.125 0.562-1.125 1.125 0 0.578 0.562 1.141 1.125 1.141 0.844 0 1.422-0.562 1.422-1.141zM22.75 10.922c-0.359-0.047-0.719-0.063-1.094-0.063-5.375 0-9.625 4.016-9.625 8.953 0 0.828 0.125 1.625 0.359 2.375-0.359 0.031-0.703 0.047-1.063 0.047-1.422 0-2.547-0.281-3.969-0.562l-3.953 1.984 1.125-3.406c-2.828-1.984-4.531-4.547-4.531-7.656 0-5.391 5.094-9.625 11.328-9.625 5.563 0 10.453 3.391 11.422 7.953zM32 19.687c0 2.547-1.688 4.813-3.969 6.516l0.859 2.828-3.109-1.703c-1.141 0.281-2.281 0.578-3.406 0.578-5.391 0-9.625-3.688-9.625-8.219s4.234-8.219 9.625-8.219c5.094 0 9.625 3.688 9.625 8.219z"></path>
+        </svg>
+    </span>
+    <span class="item" data-type="weibo">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M13.444 27.064c-5.3 0.525-9.875-1.875-10.219-5.35-0.344-3.481 3.675-6.719 8.969-7.244 5.3-0.525 9.875 1.875 10.212 5.35 0.35 3.481-3.669 6.725-8.963 7.244zM24.038 15.521c-0.45-0.137-0.762-0.225-0.525-0.819 0.512-1.287 0.563-2.394 0.006-3.188-1.038-1.481-3.881-1.406-7.137-0.037 0 0-1.025 0.444-0.762-0.363 0.5-1.613 0.425-2.956-0.356-3.737-1.769-1.769-6.469 0.069-10.5 4.1-3.013 3.006-4.763 6.212-4.763 8.981 0 5.287 6.787 8.506 13.425 8.506 8.7 0 14.494-5.056 14.494-9.069 0-2.431-2.044-3.806-3.881-4.375z"></path>
+            <path d="M29.819 5.833c-2.1-2.331-5.2-3.219-8.063-2.612v0c-0.663 0.144-1.081 0.794-0.938 1.45 0.144 0.662 0.788 1.081 1.45 0.938 2.038-0.431 4.238 0.2 5.731 1.856s1.9 3.913 1.256 5.888v0c-0.206 0.644 0.144 1.331 0.788 1.544 0.644 0.206 1.331-0.144 1.544-0.787v-0.006c0.9-2.762 0.331-5.938-1.769-8.269z"></path>
+            <path d="M26.588 8.752c-1.025-1.138-2.538-1.569-3.925-1.269-0.569 0.119-0.931 0.688-0.813 1.256 0.125 0.569 0.688 0.931 1.25 0.806v0c0.681-0.144 1.419 0.069 1.919 0.619 0.5 0.556 0.637 1.313 0.419 1.975v0c-0.175 0.55 0.125 1.15 0.681 1.331 0.556 0.175 1.15-0.125 1.331-0.681 0.438-1.356 0.163-2.906-0.863-4.037z"></path>
+            <path d="M13.738 20.771c-0.188 0.319-0.594 0.469-0.912 0.337-0.319-0.125-0.412-0.488-0.231-0.794 0.188-0.306 0.581-0.456 0.894-0.337 0.313 0.113 0.425 0.469 0.25 0.794zM12.044 22.933c-0.512 0.819-1.613 1.175-2.438 0.8-0.813-0.369-1.056-1.319-0.544-2.119 0.506-0.794 1.569-1.15 2.388-0.806 0.831 0.356 1.1 1.3 0.594 2.125zM13.969 17.146c-2.519-0.656-5.369 0.6-6.463 2.819-1.119 2.262-0.037 4.781 2.506 5.606 2.638 0.85 5.75-0.456 6.831-2.894 1.069-2.394-0.262-4.85-2.875-5.531z"></path>
+        </svg>
+    </span>
+    <span class="item" data-type="twitter">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M32.003 6.075c-1.175 0.525-2.444 0.875-3.769 1.031 1.356-0.813 2.394-2.1 2.887-3.631-1.269 0.75-2.675 1.3-4.169 1.594-1.2-1.275-2.906-2.069-4.794-2.069-3.625 0-6.563 2.938-6.563 6.563 0 0.512 0.056 1.012 0.169 1.494-5.456-0.275-10.294-2.888-13.531-6.862-0.563 0.969-0.887 2.1-0.887 3.3 0 2.275 1.156 4.287 2.919 5.463-1.075-0.031-2.087-0.331-2.975-0.819 0 0.025 0 0.056 0 0.081 0 3.181 2.263 5.838 5.269 6.437-0.55 0.15-1.131 0.231-1.731 0.231-0.425 0-0.831-0.044-1.237-0.119 0.838 2.606 3.263 4.506 6.131 4.563-2.25 1.762-5.075 2.813-8.156 2.813-0.531 0-1.050-0.031-1.569-0.094 2.913 1.869 6.362 2.95 10.069 2.95 12.075 0 18.681-10.006 18.681-18.681 0-0.287-0.006-0.569-0.019-0.85 1.281-0.919 2.394-2.075 3.275-3.394z"></path>
+        </svg>
+    </span>
+    <span class="item__qr"></span>
+</div>            </div>
+        </footer>
+            <div id="relevantArticles" class="abstract"></div>
+            <div id="randomArticles" class="abstract"></div>
+        <br>
+    </article>
+        <div style="padding: 30px 60px 30px 50px;" id="gitalk-container"></div>
+        <div id="b3logsolocomments"></div>
+        <div id="vcomment" style="padding: 30px 60px 30px 50px;" data-name="zhangkeyang"
+             data-postId="1613219732753"></div>
+
+<footer class="footer">
+    <div class="fn-clear">
+        浏览数：<span data-uvstaturl="https://Zhangkeyang0828.github.io">0</span>
+        &nbsp;
+        文章总数：4
+        <br>
+        &copy; 2021
+        <a href="https://Zhangkeyang0828.github.io">张科扬</a>
+        
+    </div>
+    <span onclick="Util.goTop()" class="icon-goup"></span>
+</footer>
+<script>
+  var Label = {
+    speech: true,
+    servePath: "https://Zhangkeyang0828.github.io",
+    staticServePath: "https://Zhangkeyang0828.github.io",
+    luteAvailable: false,
+    hljsStyle: 'github',
+    langLabel: "zh_CN",
+    version: "4.3.1",
+    staticSite: true,
+    showCodeBlockLn: false,
+    articleId: "1613219732753",
+  }
+</script>
+<script src="https://Zhangkeyang0828.github.io/skins/yilia/js/common.min.js?1613218681521"></script>
+
+
+<script type="text/javascript">
+    Util.addScript('https://Zhangkeyang0828.github.io/js/page.min.js?1613218681521', 'soloPageScript')
+    var page = new Page({
+        "commentContentCannotEmptyLabel": "评论不能为空",
+        "oId": "1613219732753",
+        "blogHost": "https://Zhangkeyang0828.github.io",
+        "randomArticles1Label": "随机阅读：",
+        "externalRelevantArticles1Label": "站外相关阅读："
+    });
+    $(document).ready(function () {
+        page.load();
+        page.tips.externalRelevantArticlesDisplayCount = "0";
+            page.loadRandomArticles();
+            page.loadRelevantArticles('1613219732753', '<h4>相关阅读：</h4>');
+        page.share()
+    });
+</script>
+</main>
+</body>
+</html>
+
+<!-- Generated by Latke (https://github.com/88250/latke) in 12ms, 2021/02/13 20:44:28 -->
