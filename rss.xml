@@ -6,8 +6,19 @@
     <atom:link href="https://Zhangkeyang0828.github.io/rss.xml" rel="self" type="application/rss+xml"/>
     <description>记录精彩的程序人生</description>
     <generator>Solo, v4.3.1, https://b3log.org/solo</generator>
-    <lastBuildDate>Sun, 14 Feb 2021 23:10:54 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 15 Feb 2021 20:06:38 +0800</lastBuildDate>
     <language>zh-cn</language>
+    <item>
+      <title>存储器的概念和分类</title>
+      <link>https://Zhangkeyang0828.github.io/articles/2021/02/15/1613390769356.html</link>
+      <description>
+        <![CDATA[<p>存储器的概念和分类</p>]]>
+      </description>
+      <author>zhangkeyang</author>
+      <guid>https://Zhangkeyang0828.github.io/articles/2021/02/15/1613390769356.html</guid>
+      <category>计算机系统原理</category>
+      <pubDate>Mon, 15 Feb 2021 20:06:09 +0800</pubDate>
+    </item>
     <item>
       <title>总线的通讯控制</title>
       <link>https://Zhangkeyang0828.github.io/articles/2021/02/14/1613314851546.html</link>
